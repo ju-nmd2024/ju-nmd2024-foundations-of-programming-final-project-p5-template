@@ -1,13 +1,10 @@
-class MountainBackground {
+export default class MountainBackground {
   constructor(x, y) {
     this.x = x;
     this.y = y;
   }
 
   draw() {
-    background(133, 206, 244);
-    noStroke();
-
     //Mountains, counted from left to right
     //9th mountain
     fill(125, 112, 79);
@@ -121,10 +118,4 @@ class MountainBackground {
     ellipse(this.x + 100, this.y + 400, width / 2 - 10, height - 900);
     ellipse(this.x + 700, this.y + 260, width / 2 - 10, height - 900);
   }
-}
-
-const mountain = new MountainBackground(100, 330);
-
-function draw() {
-  mountain.draw();
 }
