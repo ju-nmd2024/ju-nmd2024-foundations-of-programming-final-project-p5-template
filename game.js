@@ -1,4 +1,8 @@
-let state = "start";
+import MountainBackground from "./mountainBackground.js";
+
+const mountainB = new MountainBackground(100, 330);
+
+state = "start";
 
 function setup() {
   createCanvas(900, 900);
@@ -8,6 +12,7 @@ function setup() {
   width = 900;
   height = 900;
 }
+window.setup = setup;
 
 function mousePressed() {
   if (state === "start") {
@@ -29,68 +34,9 @@ function mousePressed() {
   }
 }
 
-function mountainBackground(x, y) {
-  //Mountains, counted from left to right
-  //9th mountain
-  fill(125, 112, 79);
-  triangle(x + 555, y, x + 710, y - 250, x + 830, y);
-
-  //5th mountain
-  fill(128, 120, 100);
-  triangle(x + 250, y, x + 380, y - 290, x + 510, y);
-
-  //8th mountain
-  fill(95, 83, 55);
-  triangle(x + 570, y, x + 650, y - 190, x + 730, y);
-
-  //6th mountain
-  fill(128, 120, 100);
-  triangle(x + 390, y, x + 465, y - 230, x + 580, y);
-
-  //7th mountain
-  fill(95, 83, 55);
-  triangle(x + 410, y, x + 550, y - 260, x + 700, y);
-
-  //3rd mountain
-  fill(128, 120, 100);
-  triangle(x - 50, y, x + 100, y - 270, x + 250, y);
-
-  //4th mountain
-  fill(95, 83, 55);
-  triangle(x + 100, y, x + 250, y - 260, x + 370, y);
-
-  //10th mountain
-  fill(128, 120, 100);
-  triangle(x + 680, y, x + 780, y - 280, x + 870, y);
-
-  //2nd mountain
-  fill(125, 112, 79);
-  triangle(x - 100, y, x, y - 280, x + 100, y);
-
-  //1st mountain
-  fill(125, 112, 79);
-  triangle(x - 150, y, x - 70, y - 210, x, y);
-
-  //Snow
-  fill(255, 255, 255);
-  rect(x - 100, y, x + 900, y + 570);
-  ellipse(x - 80, y + 10, width / 2 - 40, height / 2 - 500);
-  ellipse(x, y, width / 2 - 270, height / 2 - 500);
-  ellipse(x + 150, y, width / 2 - 240, height / 2 - 400);
-  ellipse(x + 300, y + 10, width / 2 - 100, height / 2 - 410);
-  ellipse(x + 540, y, width / 2 - 100, height / 2 - 400);
-  ellipse(x + 780, y + 15, width / 2 - 250, height / 2 - 400);
-
-  fill(242, 244, 244);
-  ellipse(x, y + 50, width / 2 - 50, height - 900);
-  ellipse(x + 300, y + 150, width / 2 - 60, height - 900);
-  ellipse(x + 100, y + 400, width / 2 - 10, height - 900);
-  ellipse(x + 700, y + 260, width / 2 - 10, height - 900);
-}
-
 function startScreen() {
   background(133, 206, 244);
-  mountainBackground(100, 330);
+  mountainB.draw();
 
   //Start and options button
   fill(255, 244, 220);
@@ -111,7 +57,7 @@ function startScreen() {
 
 function optionScreen() {
   background(133, 206, 244);
-  mountainBackground(100, 330);
+  mountainB.draw();
 
   fill(255, 244, 220);
   rect(width / 2 - 335, height / 2 + 50, 250, 80, 30);
@@ -135,12 +81,12 @@ function optionScreen() {
 
 function gameScreen() {
   background(133, 206, 244);
-  mountainBackground(100, 330);
+  mountainB.draw();
 }
 
 function resultScreen() {
   background(133, 206, 244);
-  mountainBackground(100, 330);
+  mountainB.draw();
 
   fill(255, 244, 220);
   rect(width / 2 - 130, height / 2 + 150, 300, 80, 30);
