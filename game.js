@@ -17,6 +17,7 @@ const mountainB = new MountainBackground(100, 330);
 
 //State variable
 state = "start";
+let score = 0;
 
 //Control for character variable
 let controlMode = "arrow";
@@ -35,7 +36,7 @@ function createSnowball() {
     //Size of the snowballs
     size: 150,
     //Random speeds for the snowballs
-    speed: 2,
+    speed: 4,
   };
   snowballs.push(snowball);
 }
@@ -184,6 +185,21 @@ function gameScreen() {
   background(133, 206, 244);
   mountainB.draw();
 
+  //Score text
+  push();
+  stroke(0, 0, 0);
+  fill(0, 0, 0);
+  textSize(30);
+  text("Score:" + score, width / 2 - 420, height / 2 - 410);
+  pop();
+
+  //Lives text
+  push();
+  fill(255, 50, 50);
+  ellipse(width / 2 + 410, height / 2 - 415, 30);
+  ellipse(width / 2 + 370, height / 2 - 415, 30);
+  ellipse(width / 2 + 330, height / 2 - 415, 30);
+  pop();
   //Character movement
   if (controlMode === "arrow") {
     if (keyIsDown(37)) {
@@ -208,7 +224,7 @@ function gameScreen() {
 
   updateSnowballs();
 
-  if (frameCount % 30 === 0) {
+  if (frameCount % 70 === 0) {
     createSnowball();
   }
 
@@ -242,7 +258,7 @@ function resultScreen() {
 
 //Draw function using states
 function draw() {
-  if (state === "start") {
+  /*if (state === "start") {
     startScreen();
   } else if (state === "options") {
     optionScreen();
@@ -250,6 +266,8 @@ function draw() {
     gameScreen();
   } else if (state === "result") {
     resultScreen();
-  }
+  }*/
+
+  gameScreen();
 }
 window.draw = draw;
