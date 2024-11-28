@@ -21,8 +21,41 @@ state = "start";
 //Control for character variable
 let controlMode = "arrow";
 
+let snowballs = [];
+
 //Character variable
 let characterX = 450;
+
+function createSnowball() {
+  let snowball = {
+    //Random x positioning
+    x: random(50, width - 50),
+    //Y position for the spawning
+    y: 370,
+    //Size of the snowballs
+    size: 150,
+    //Random speeds for the snowballs
+    speed: 2,
+  };
+  snowballs.push(snowball);
+}
+
+function updateSnowballs() {
+  for (let i = snowballs.length - 1; i >= 0; i--) {
+    let snowball = snowballs[i];
+    snowball.y += snowball.speed;
+
+    push();
+    stroke(0, 0, 0);
+    fill(255, 255, 255);
+    ellipse(snowball.x, snowball.y, snowball.size);
+    pop();
+
+    if (snowball.y > height + snowball.size / 2) {
+      snowballs.splice(i, 1);
+    }
+  }
+}
 
 //Function for when the mouse is pressed
 function mousePressed() {
@@ -87,16 +120,6 @@ function mousePressed() {
   }
 }
 window.mousePressed = mousePressed;
-
-function snowBalls() {
-  push();
-  stroke(0, 0, 0);
-  fill(255, 255, 255);
-  ellipse(width / 4 - 100, height / 2 - 50, 125);
-  ellipse(width / 2, height / 2 - 50, 125);
-  ellipse(width - 125, height / 2 - 50, 125);
-  pop();
-}
 
 function character() {
   push();
@@ -183,7 +206,12 @@ function gameScreen() {
   //Constrains the character from moving outside the canvas
   characterX = constrain(characterX, 50, width - 50);
 
-  snowBalls();
+  updateSnowballs();
+
+  if (frameCount % 30 === 0) {
+    createSnowball();
+  }
+
   character();
   //character.draw();
 }
