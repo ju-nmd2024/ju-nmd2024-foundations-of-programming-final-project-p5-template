@@ -6,19 +6,35 @@ function startScreen(){
   rect(150,200,100,50,10);
 
   pop ();
-  text("start",187,230);
-  
-  obstacleGreen(10,10);
-  jumper (100,100);
+
+  text("Start",187,230);
 }
+
 
 function gameScreen(){
   background(255,255,255);
+  text("Game",187,230);
+  obstacleGreen(10,10);
+  jumper (x,300);
+  
+  if (keyIsDown(39)){
+    speed = 9;
+  } else if (keyIsDown (37)){
+    speed = -9
+  } else {
+    speed = 0;
+  }
+  
+  x+= speed;
+
 }
 
 function resultScreenLoss(){
   background(255,255,255);
 }
+
+let speed = 0;
+let x = 185;
 
 function obstacleGreen(x,y){
   push ();
@@ -52,13 +68,14 @@ let state = "start";
 function draw(){
   if (state === "start") {
       startScreen();
+
+        if ((mouseIsPressed) && (mouseX > 150) && (mouseX < 250) && (mouseY > 200) && (mouseY < 250)){
+        state = "game";
+        }
+
   } else if (state === "game") { 
       gameScreen();
+
   }
 }
 
-function mousePressed() {
-  if ( (mouseX > 100) && (mouseX < 300) && (mouseY > 100) && (mouseY < 200)){
-  console.log ("Hello Garrit");
-  }
-}  
