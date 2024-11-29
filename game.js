@@ -1,9 +1,15 @@
 function startScreen(){
   background(255,255,255);
-  text("start",160,50);
+  push();
 
+  fill(200,0,0);
+  rect(150,200,100,50,10);
+
+  pop ();
+  text("start",187,230);
   
-  obstacleGreen(100,100);
+  obstacleGreen(10,10);
+  jumper (100,100);
 }
 
 function gameScreen(){
@@ -16,14 +22,23 @@ function resultScreenLoss(){
 
 function obstacleGreen(x,y){
   push ();
+  
   fill (34,177,76);
-  rect (0,0,70,10,10);
+  rect (x,y,70,10,10);
   pop ();
 }
 function obstacleRed(x,y){
   push ();
   fill (237,28,36);
-  rect (0,0,70,10,10);
+  rect (x,y,70,10,10);
+  pop ();
+}
+
+function jumper(x,y){
+
+  push ();
+  fill(100,100,100);
+  rect(x,y,30,50);
   pop ();
 }
 function setup (){
@@ -41,3 +56,9 @@ function draw(){
       gameScreen();
   }
 }
+
+function mousePressed() {
+  if ( (mouseX > 100) && (mouseX < 300) && (mouseY > 100) && (mouseY < 200)){
+  console.log ("Hello Garrit");
+  }
+}  
