@@ -50,6 +50,27 @@ function obstacleRed(x,y){
   pop ();
 }
 
+/*class jumper {
+  constructor (x,y){
+    push ();
+    fill(100,100,100);
+    rect(x,y,30,50);
+    pop ();
+  }
+
+  move(){
+    if (keyIsDown(39)){
+      speed = 9;
+    } else if (keyIsDown (37)){
+      speed = -9
+    } else {
+      speed = 0;
+    }
+
+    x+= speed;
+  }
+
+}*/
 function jumper(x,y){
 
   push ();
