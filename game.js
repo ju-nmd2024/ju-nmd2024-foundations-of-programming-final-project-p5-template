@@ -1,127 +1,115 @@
-function startScreen(){
-  background(255,255,255);
+function startScreen() {
+  background(255, 255, 255);
   push();
-
-  fill(200,0,0);
-  rect(150,200,100,50,10);
-
-  pop ();
-
-  text("Start",187,230);
+  fill(200, 0, 0);
+  rect(150, 200, 100, 50, 10);
+  pop();
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  fill(0);
+  text("Start", 200, 225);
 }
 
+function gameScreen() {
+  background(255, 255, 255);
+  text("Game", 187, 230);
 
-function gameScreen(){
-  background(255,255,255);
-  text("Game",187,230);
-  obstacleGreen(10,10);
-  /*jumper (x,300);
-  
-  if (keyIsDown(39)){
-    speed = 9;
-  } else if (keyIsDown (37)){
-    speed = -9;
-  } else {
-    speed = 0;
-  }
-  
-  if (x>400){
-    x= 0;
-  } else if (x<0){
-    x = 400;
-  }
-  
-  x+= speed;
-  */
-  player.display(x);
+  player.display();
   player.move();
 
+  platta.display();
+  platta.update();
 }
 
-function resultScreenLoss(){
-  background(255,255,255);
+function resultScreenLoss() {
+  background(255, 255, 255);
 }
+
 let player;
 let speed = 0;
 let x = 185;
 let gravity = 0.6;
-let velocityY = 0;
 let jumperY = 300;
-
-function obstacleGreen(x,y){
-  push ();
-  
-  fill (34,177,76);
-  rect (x,y,70,10,10);
-  pop ();
-}
-
-function obstacleRed(x,y){
-  push ();
-  fill (237,28,36);
-  rect (x,y,70,10,10);
-  pop ();
-}
+let platta;
 
 class jumper {
-  display(x){
-    push ();
-    fill(100,100,100);
-    rect(x,jumperY,30,50);
-    pop ();
+  constructor() {
+    this.velocityY = 0;
   }
 
-  move(){
-    if (keyIsDown(39)){
+  display() {
+    push();
+    fill(100, 100, 100);
+    rect(x, jumperY, 30, 50);
+    pop();
+  }
+
+  move() {
+    if (keyIsDown(RIGHT_ARROW)) {
       speed = 9;
-    } else if (keyIsDown (37)){
+    } else if (keyIsDown(LEFT_ARROW)) {
       speed = -9;
     } else {
       speed = 0;
     }
 
-    if (x>400){
-    x= 0;
-    } else if (x<0){
-    x = 400;
+    if (x > 400) {
+      x = 0;
+    } else if (x < 0) {
+      x = 400;
     }
 
-    x+= speed;
+    x += speed;
 
-    velocityY += gravity;
-    jumperY += velocityY;
-    
+    this.velocityY += gravity;
+    jumperY += this.velocityY;
+  }
+}
+
+class platform {
+  constructor(x, y) {
+    this.platformX = x;
+    this.platformY = y;
   }
 
-}
-/*function jumper(x,y){
+  display() {
+    fill(50, 200, 50);
+    rect(this.platformX, this.platformY, 50, 10, 5);
+  }
 
-  push ();
-  fill(100,100,100);
-  rect(x,y,30,50);
-  pop ();
-}*/
-function setup (){
-  createCanvas(400,560);
-  
+  update() {
+    if (player.velocityY < 0) {
+      this.platformY -= player.velocityY;
+    }
+
+    if (this.platformY > height) {
+      this.platformY = -10;
+      this.platformX = random(0, 350);
+    }
+  }
+}
+
+function setup() {
+  createCanvas(400, 560);
+  platta = new platform(random(0, 350), 500);
   player = new jumper();
 }
 
-//Änsålänge kan vi använda denna för att ändra till vilken skärm vi vill ha för att jobba med en specifik skärm
-let state = "start"; 
+let state = "start";
 
-function draw(){
+function draw() {
   if (state === "start") {
-      startScreen();
-
-        if ((mouseIsPressed) && (mouseX > 150) && (mouseX < 250) && (mouseY > 200) && (mouseY < 250)){
-        state = "game";
-        }
-
-  } else if (state === "game") { 
-      gameScreen();
-
+    startScreen();
+    if (
+      mouseIsPressed &&
+      mouseX > 150 &&
+      mouseX < 250 &&
+      mouseY > 200 &&
+      mouseY < 250
+    ) {
+      state = "game";
+    }
+  } else if (state === "game") {
+    gameScreen();
   }
 }
-
-//Hej
