@@ -20,7 +20,7 @@ function gameScreen(){
   if (keyIsDown(39)){
     speed = 9;
   } else if (keyIsDown (37)){
-    speed = -9
+    speed = -9;
   } else {
     speed = 0;
   }
@@ -79,3 +79,4 @@ function draw(){
   }
 }
 
+//Hej
