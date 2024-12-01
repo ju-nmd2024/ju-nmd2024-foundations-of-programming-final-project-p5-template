@@ -15,7 +15,7 @@ function gameScreen(){
   background(255,255,255);
   text("Game",187,230);
   obstacleGreen(10,10);
-  jumper (x,300);
+  /*jumper (x,300);
   
   if (keyIsDown(39)){
     speed = 9;
@@ -25,16 +25,28 @@ function gameScreen(){
     speed = 0;
   }
   
+  if (x>400){
+    x= 0;
+  } else if (x<0){
+    x = 400;
+  }
+  
   x+= speed;
+  */
+  player.display(x);
+  player.move();
 
 }
 
 function resultScreenLoss(){
   background(255,255,255);
 }
-
+let player;
 let speed = 0;
 let x = 185;
+let gravity = 0.6;
+let velocityY = 0;
+let jumperY = 300;
 
 function obstacleGreen(x,y){
   push ();
@@ -43,6 +55,7 @@ function obstacleGreen(x,y){
   rect (x,y,70,10,10);
   pop ();
 }
+
 function obstacleRed(x,y){
   push ();
   fill (237,28,36);
@@ -50,11 +63,11 @@ function obstacleRed(x,y){
   pop ();
 }
 
-/*class jumper {
-  constructor (x,y){
+class jumper {
+  display(x){
     push ();
     fill(100,100,100);
-    rect(x,y,30,50);
+    rect(x,jumperY,30,50);
     pop ();
   }
 
@@ -62,25 +75,36 @@ function obstacleRed(x,y){
     if (keyIsDown(39)){
       speed = 9;
     } else if (keyIsDown (37)){
-      speed = -9
+      speed = -9;
     } else {
       speed = 0;
     }
 
+    if (x>400){
+    x= 0;
+    } else if (x<0){
+    x = 400;
+    }
+
     x+= speed;
+
+    velocityY += gravity;
+    jumperY += velocityY;
+    
   }
 
-}*/
-function jumper(x,y){
+}
+/*function jumper(x,y){
 
   push ();
   fill(100,100,100);
   rect(x,y,30,50);
   pop ();
-}
+}*/
 function setup (){
   createCanvas(400,560);
   
+  player = new jumper();
 }
 
 //Änsålänge kan vi använda denna för att ändra till vilken skärm vi vill ha för att jobba med en specifik skärm
