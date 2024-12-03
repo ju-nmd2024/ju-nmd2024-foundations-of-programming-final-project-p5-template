@@ -11,11 +11,12 @@ function startScreen() {
 
 function gameScreen() {
   background(255, 255, 255);
-  text("Game", 187, 230);
+  text("Game", 187, 20);
 
   player.display();
   player.move();
 
+  //for-loop for platform distance
   for (let platta of platforms) {
     platta.display();
     platta.update();
@@ -30,6 +31,17 @@ function gameScreen() {
 
 function resultScreenLoss() {
   background(255, 255, 255);
+  
+  background(255, 255, 255);
+  push();
+  fill(200, 0, 0);
+  rect(150, 300, 100, 50, 10);
+  pop();
+  textSize(20);
+  fill(0);
+  text("You Lost", 160, 250);
+  text("Play Again", 152, 330);
+  text("Press ´R´ Key to reset or ´Play again´", 30, 500);
 }
 
 let player;
@@ -38,11 +50,15 @@ let x = 185;
 let gravity = 0.3;
 let jumperY = 200;
 let platta;
+
+//array
 let platforms = [];
 let startY = 500;
 let state = "start";
 
 class jumper {
+
+  //defining variable
   constructor() {
     this.velocityY = 0;
   }
@@ -54,7 +70,8 @@ class jumper {
     rect(x, jumperY, 30, 50);
     pop();
   }
-
+  
+  //moves the player left and right
   move() {
     if (keyIsDown(39)) {
       speed = 7;
@@ -64,6 +81,7 @@ class jumper {
       speed = 0;
     }
 
+    //if player goes to the right end of screen they will warp around to the other side
     if (x > 400) {
       x = 0;
     } else if (x < 0) {
@@ -72,12 +90,14 @@ class jumper {
 
     x += speed;
 
+    //adding the velocity to the gravity and then uptading the player position
     this.velocityY += gravity;
     jumperY += this.velocityY;
   }
 }
 
 class platform {
+  //defining variables
   constructor(x, y) {
     this.platformX = x;
     this.platformY = y;
@@ -89,15 +109,23 @@ class platform {
   }
 
   update() {
+
+    //new looped platforms dont move down at the same time as others 
     if (player.velocityY < 0) {
       this.platformY -= player.velocityY;
     }
 
-
+    //stops the player from junmping off screen too far
+    if (jumperY <=-70){
+      player.velocityY =0;
+    }
+    
+    //reusing the platforms
     if (this.platformY > height) {
-      this.platformY = -10;
+      this.platformY = 0;
       this.platformX = random(0, 350);
     }
+      
   }
 
   //function that checks if the terms are fullfilled and then sends true or false to where this function is called
@@ -110,13 +138,14 @@ class platform {
 function setup() {
   createCanvas(400, 550);
   frameRate(50);
+
   player = new jumper();
 
   //create 5 platforms
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     platforms.push(new platform(random(0, 350), startY));
 
-    startY -= random(120, 160); //Next platform creates randomly between 100-200 pxl from the previouse one
+    startY -= random(80, 110); //Next platform creates randomly between 100-200 pxl from the previouse one
   }
 }
 
@@ -129,9 +158,27 @@ function draw() {
   } else if (state === "game") {
     gameScreen();
     if (jumperY > 550){
+      
       state = "end";
+
+      //resets the player
+      jumperY = 200;
+      x = 185;
+      player.velocityY = 0;
+      startY = random(500, 550);
+      platforms = [];
+
+      //Resetting the platforms to make a new pattern
+      for (let i = 0; i < 6; i++) {
+        platforms.push(new platform(random(0, 350), startY));
+        startY -= random(80, 110); 
+      }
+      
     }
   } else if (state === "end") {
     resultScreenLoss();
+    if (mouseIsPressed && mouseX > 150 && mouseX < 250 && mouseY > 300 && mouseY < 350 || keyIsDown(82)) {
+      state = "game";
+    }
   }
 }
