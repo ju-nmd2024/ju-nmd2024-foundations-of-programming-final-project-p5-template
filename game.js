@@ -4,10 +4,9 @@ function startScreen() {
   fill(200, 0, 0);
   rect(150, 200, 100, 50, 10);
   pop();
-  textAlign(CENTER, CENTER);
   textSize(20);
   fill(0);
-  text("Start", 200, 225);
+  text("Start", 180, 230);
 }
 
 function gameScreen() {
@@ -19,7 +18,13 @@ function gameScreen() {
 
   platta.display();
   platta.update();
+ // calls the function from the platformclass
+  if(platta.collision(x,jumperY)){
+    jumperY = platta.platformY-50;
+    player.velocityY = -10;
+  }
 }
+
 
 function resultScreenLoss() {
   background(255, 255, 255);
@@ -28,14 +33,16 @@ function resultScreenLoss() {
 let player;
 let speed = 0;
 let x = 185;
-let gravity = 0.6;
+let gravity = 0.3;
 let jumperY = 300;
 let platta;
+
 
 class jumper {
   constructor() {
     this.velocityY = 0;
   }
+
 
   display() {
     push();
@@ -45,9 +52,9 @@ class jumper {
   }
 
   move() {
-    if (keyIsDown(RIGHT_ARROW)) {
+    if (keyIsDown(39)) {
       speed = 9;
-    } else if (keyIsDown(LEFT_ARROW)) {
+    } else if (keyIsDown(37)) {
       speed = -9;
     } else {
       speed = 0;
@@ -77,36 +84,42 @@ class platform {
     rect(this.platformX, this.platformY, 50, 10, 5);
   }
 
+
   update() {
     if (player.velocityY < 0) {
       this.platformY -= player.velocityY;
     }
+
 
     if (this.platformY > height) {
       this.platformY = -10;
       this.platformX = random(0, 350);
     }
   }
+
+  //function that checks if the terms are fullfilled and then sends true or false to where this function is called
+  collision(x,jumperY){
+    return(x + 25 > this.platformX && x + 25 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
+  }
+
+
+
 }
 
 function setup() {
   createCanvas(400, 560);
+  frameRate(60);
   platta = new platform(random(0, 350), 500);
   player = new jumper();
 }
+
 
 let state = "start";
 
 function draw() {
   if (state === "start") {
     startScreen();
-    if (
-      mouseIsPressed &&
-      mouseX > 150 &&
-      mouseX < 250 &&
-      mouseY > 200 &&
-      mouseY < 250
-    ) {
+    if (mouseIsPressed && mouseX > 150 && mouseX < 250 && mouseY > 200 && mouseY < 250) {
       state = "game";
     }
   } else if (state === "game") {
