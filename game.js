@@ -16,15 +16,17 @@ function gameScreen() {
   player.display();
   player.move();
 
-  platta.display();
-  platta.update();
- // calls the function from the platformclass
-  if(platta.collision(x,jumperY)){
-    jumperY = platta.platformY-50;
-    player.velocityY = -10;
+  for (let platta of platforms) {
+    platta.display();
+    platta.update();
+
+    // calls the function from the platformclass
+    if (platta.collision(x, jumperY)) {
+      jumperY = platta.platformY - 50;
+      player.velocityY = -8;
+    }
   }
 }
-
 
 function resultScreenLoss() {
   background(255, 255, 255);
@@ -34,9 +36,11 @@ let player;
 let speed = 0;
 let x = 185;
 let gravity = 0.3;
-let jumperY = 300;
+let jumperY = 200;
 let platta;
-
+let platforms = [];
+let startY = 500;
+let state = "start";
 
 class jumper {
   constructor() {
@@ -53,9 +57,9 @@ class jumper {
 
   move() {
     if (keyIsDown(39)) {
-      speed = 9;
+      speed = 7;
     } else if (keyIsDown(37)) {
-      speed = -9;
+      speed = -7;
     } else {
       speed = 0;
     }
@@ -84,7 +88,6 @@ class platform {
     rect(this.platformX, this.platformY, 50, 10, 5);
   }
 
-
   update() {
     if (player.velocityY < 0) {
       this.platformY -= player.velocityY;
@@ -98,23 +101,24 @@ class platform {
   }
 
   //function that checks if the terms are fullfilled and then sends true or false to where this function is called
-  collision(x,jumperY){
-    return(x + 25 > this.platformX && x + 25 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
+  collision(x, jumperY) {
+    return (x + 30 > this.platformX && x + 20 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
   }
-
-
 
 }
 
 function setup() {
-  createCanvas(400, 560);
-  frameRate(60);
-  platta = new platform(random(0, 350), 500);
+  createCanvas(400, 550);
+  frameRate(50);
   player = new jumper();
+
+  //create 5 platforms
+  for (let i = 0; i < 5; i++) {
+    platforms.push(new platform(random(0, 350), startY));
+
+    startY -= random(120, 160); //Next platform creates randomly between 100-200 pxl from the previouse one
+  }
 }
-
-
-let state = "start";
 
 function draw() {
   if (state === "start") {
@@ -124,5 +128,10 @@ function draw() {
     }
   } else if (state === "game") {
     gameScreen();
+    if (jumperY > 550){
+      state = "end";
+    }
+  } else if (state === "end") {
+    resultScreenLoss();
   }
 }
