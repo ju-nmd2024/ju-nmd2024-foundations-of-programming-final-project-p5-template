@@ -22,6 +22,7 @@ function gameScreen() {
   player.move();
 
   //for-loop for platform distance
+  //our chatgpt conversation dissapeared because we werent signed in. the for-loop code was found by asking chatgpt and copied the code that it recomended
   for (let platta of platforms) {
     platta.display();
     platta.update();
@@ -170,7 +171,7 @@ function setup() {
   for (let i = 0; i < 100; i++) {
     platforms.push(new platform(random(0, 350), startY));
 
-    startY -= random(90, 120); //Next platform creates randomly between 100-200 pxl from the previouse one
+    startY -= random(90, 120); //Next platform creates randomly between 90-120 pxl from the previouse one
   }
 }
 
