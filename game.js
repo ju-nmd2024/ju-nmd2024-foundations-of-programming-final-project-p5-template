@@ -1,5 +1,5 @@
 function startScreen() {
-  background(255, 255, 255);
+  background(250, 247, 231);
   push();
   fill(200, 0, 0);
   rect(150, 200, 100, 50, 10);
@@ -7,12 +7,17 @@ function startScreen() {
   textSize(20);
   fill(0);
   text("Start", 180, 230);
+  textSize(17);
+  text("There will be 100 platforms,", 100, 350);
+  text("your goal is to jump as many times as possible", 20, 370);
 }
 
+
 function gameScreen() {
-  background(255, 255, 255);
+  background(250, 247, 231);
   text("Game", 187, 20);
 
+  //show the character in gamescreen
   player.display();
   player.move();
 
@@ -22,17 +27,24 @@ function gameScreen() {
     platta.update();
 
     // calls the function from the platformclass
-    if (platta.collision(x, jumperY)) {
-      jumperY = platta.platformY - 50;
-      player.velocityY = -8;
-    }
+      if (platta.collision(x, jumperY) && player.velocityY > 0) {
+        jumperY = platta.platformY - 50;
+       player.velocityY = -8;
+
+       //adds a point for every jump
+       score += 1;
+     }
+    
+     //displaying the score and highscore on gamescreen
+     textSize(20);
+     fill(0);
+     text("Score: " + score, 10, 30);
+     text("High Score:" + highscore, 10, 50);
   }
 }
 
 function resultScreenLoss() {
-  background(255, 255, 255);
-  
-  background(255, 255, 255);
+  background(250, 247, 231);
   push();
   fill(200, 0, 0);
   rect(150, 300, 100, 50, 10);
@@ -42,6 +54,12 @@ function resultScreenLoss() {
   text("You Lost", 160, 250);
   text("Play Again", 152, 330);
   text("Press ´R´ Key to reset or ´Play again´", 30, 500);
+
+  //displaying the score and highscore on resultscreen
+  textSize(20);
+  fill(0);
+  text("Score: " + score, 10, 30);
+  text("High Score:" + highscore, 10, 50);
 }
 
 let player;
@@ -56,6 +74,9 @@ let platforms = [];
 let startY = 500;
 let state = "start";
 
+let score = 0;
+let highscore = 0;
+
 class jumper {
 
   //defining variable
@@ -65,9 +86,10 @@ class jumper {
 
 
   display() {
+    // display character
     push();
-    fill(100, 100, 100);
-    rect(x, jumperY, 30, 50);
+    textSize(40);
+    text("🗿", x-5, jumperY+40); 
     pop();
   }
   
@@ -104,6 +126,7 @@ class platform {
   }
 
   display() {
+    //displaying the platform
     fill(50, 200, 50);
     rect(this.platformX, this.platformY, 50, 10, 5);
   }
@@ -111,27 +134,29 @@ class platform {
   update() {
 
     //new looped platforms dont move down at the same time as others 
+  
     if (player.velocityY < 0) {
       this.platformY -= player.velocityY;
     }
+    
+    //calculate points for highscore
+    let movement = this.prevY - this.platformY;
+    if (movement >=100){
+      score += Math.floor(movement / 100);
+      this.prevY = this.platformY;
+    }
 
-    //stops the player from junmping off screen too far
-    if (jumperY <=-70){
+    //stops the player from junmping over the screen too far
+    if (jumperY <= -70){
       player.velocityY =0;
     }
-    
-    //reusing the platforms
-    if (this.platformY > height) {
-      this.platformY = 0;
-      this.platformX = random(0, 350);
-    }
-      
   }
 
   //function that checks if the terms are fullfilled and then sends true or false to where this function is called
   collision(x, jumperY) {
-    return (x + 30 > this.platformX && x + 20 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
+    return (x + 20 > this.platformX && x + 15 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
   }
+
 
 }
 
@@ -142,14 +167,15 @@ function setup() {
   player = new jumper();
 
   //create 5 platforms
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 100; i++) {
     platforms.push(new platform(random(0, 350), startY));
 
-    startY -= random(80, 110); //Next platform creates randomly between 100-200 pxl from the previouse one
+    startY -= random(90, 120); //Next platform creates randomly between 100-200 pxl from the previouse one
   }
 }
 
 function draw() {
+  //letting the game know when the start screen will change to gamescreen from startscreen
   if (state === "start") {
     startScreen();
     if (mouseIsPressed && mouseX > 150 && mouseX < 250 && mouseY > 200 && mouseY < 250) {
@@ -157,10 +183,14 @@ function draw() {
     }
   } else if (state === "game") {
     gameScreen();
-    if (jumperY > 550){
+    if (jumperY > 500){
       
       state = "end";
 
+      //if you break the highscore your new one will show
+      if (score > highscore){
+        highscore = score;
+      }
       //resets the player
       jumperY = 200;
       x = 185;
@@ -169,16 +199,18 @@ function draw() {
       platforms = [];
 
       //Resetting the platforms to make a new pattern
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 100; i++) {
         platforms.push(new platform(random(0, 350), startY));
-        startY -= random(80, 110); 
+        startY -= random(90, 120); 
       }
       
     }
   } else if (state === "end") {
+    //letting the game know when the start screen will change to gamescreen from resultscreen
     resultScreenLoss();
     if (mouseIsPressed && mouseX > 150 && mouseX < 250 && mouseY > 300 && mouseY < 350 || keyIsDown(82)) {
       state = "game";
+      score = 0;
     }
   }
 }
