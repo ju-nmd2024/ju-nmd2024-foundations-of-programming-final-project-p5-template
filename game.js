@@ -23,6 +23,7 @@ function gameScreen() {
 
   //for-loop for platform distance
   //our chatgpt conversation dissapeared because we werent signed in. the for-loop code was found by asking chatgpt and copied the code that it recomended
+  //but platta is the element and platforms the array
   for (let platta of platforms) {
     platta.display();
     platta.update();
@@ -41,6 +42,16 @@ function gameScreen() {
      fill(0);
      text("Score: " + score, 10, 30);
      text("High Score:" + highscore, 10, 50);
+  }
+  
+  // calls the function of the platformBreak
+  for (let plattaBreak of platformsBreak) {
+    plattaBreak.display();
+    plattaBreak.update();
+
+    if (plattaBreak.collision(x, jumperY) && player.velocityY > 0) {
+      plattaBreak.break = true;//changes the break from false to true to display the broken platform
+    }
   }
 }
 
@@ -69,10 +80,13 @@ let x = 185;
 let gravity = 0.3;
 let jumperY = 200;
 let platta;
+let plattaBreak;
 
 //array
 let platforms = [];
+let platformsBreak = [];
 let startY = 500;
+let startYBreak = 200;
 let state = "start";
 
 let score = 0;
@@ -160,6 +174,48 @@ class platform {
 
 
 }
+//Breakable platforms
+class platformBreak {
+  //defining variables
+  constructor(x, y) {
+    this.platformX = x;
+    this.platformY = y;
+    this.break = false;//sets the initial state of the paltform
+  }
+
+  display() {
+
+    if (this.break){
+      //broken platform
+      fill(0,0,0,0);
+      rect(this.platformX, this.platformY, 50, 10, 5);
+    } else{
+      //displaying the platform 
+      fill(200, 0, 0);
+    }
+    rect(this.platformX, this.platformY, 50, 10, 5);
+  }
+
+  update() {
+
+    //new looped platforms dont move down at the same time as others 
+    if (player.velocityY < 0) {
+      this.platformY -= player.velocityY;
+    }
+    
+    //stops the player from junmping over the screen too far
+    if (jumperY <= -70){
+      player.velocityY =0;
+    }
+  }
+
+  //function that checks if the terms are fullfilled and then sends true or false to where this function is called
+  collision(x, jumperY) {
+    return (x + 20 > this.platformX && x + 15 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
+  }
+
+
+}
 
 function setup() {
   createCanvas(400, 550);
@@ -172,6 +228,12 @@ function setup() {
     platforms.push(new platform(random(0, 350), startY));
 
     startY -= random(90, 120); //Next platform creates randomly between 90-120 pxl from the previouse one
+  }
+  //create 5 breakable platforms
+  for (let i = 0; i < 100; i++) {
+    platformsBreak.push(new platformBreak(random(0, 350), startYBreak));
+
+    startYBreak -= random(90, 120); //Next platform creates randomly between 90-120 pxl from the previouse one
   }
 }
 
@@ -197,12 +259,18 @@ function draw() {
       x = 185;
       player.velocityY = 0;
       startY = random(500, 550);
+      startYBreak = random(200,250);
       platforms = [];
+      platformsBreak = [];
 
       //Resetting the platforms to make a new pattern
       for (let i = 0; i < 100; i++) {
         platforms.push(new platform(random(0, 350), startY));
         startY -= random(90, 120); 
+      }
+      for (let i = 0; i < 100; i++) {
+        platformsBreak.push(new platformBreak(random(0, 350), startYBreak));
+        startYBreak -= random(90, 120); 
       }
       
     }
