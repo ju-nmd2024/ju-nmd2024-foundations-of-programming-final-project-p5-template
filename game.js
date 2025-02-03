@@ -44,6 +44,19 @@ function gameScreen() {
      text("High Score:" + highscore, 10, 50);
   }
   
+for (let plattaMove of platformsMove) {
+    plattaMove.display();
+    plattaMove.update();
+
+    if (plattaMove.collision(x, jumperY) && player.velocityY > 0) {
+      jumperY = plattaMove.platformY - 50;
+      player.velocityY = -8;
+
+      //adds a point for every jump
+      score += 1;
+    }
+}
+
   // calls the function of the platformBreak
   for (let plattaBreak of platformsBreak) {
     plattaBreak.display();
@@ -81,12 +94,15 @@ let gravity = 0.3;
 let jumperY = 200;
 let platta;
 let plattaBreak;
+let plattaMove;
 
 //array
 let platforms = [];
+let platformsMove = [];
 let platformsBreak = [];
 let startY = 500;
 let startYBreak = 200;
+let startYMove = 200;
 let state = "start";
 
 let score = 0;
@@ -213,7 +229,40 @@ class platformBreak {
   collision(x, jumperY) {
     return (x + 20 > this.platformX && x + 15 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
   }
+}
 
+//moveable platforms
+class platformMove {
+
+  constructor(x,y) {
+    this.platformX = x;
+    this.platformY = y;
+    this.speedx = 2; // platform speed in x
+    this.direction = 1; 
+  }
+
+  display() {
+    fill(0, 0, 200);
+    rect(this.platformX, this.platformY, 50, 10, 5);
+  }
+
+  update() {
+    //platforms move in x
+    this.platformX += this.speedx * this.direction;
+    //switch if platforms reach the end of the screen
+    if (this.platformX <= 0 || this.platformX >= 350) {
+      this.direction *= -1;
+    }
+    if (player.velocityY < 0) {
+      this.platformY -= player.velocityY;
+    }
+    /*if (jumperY <= -70){
+      player.velocityY = 0;
+    }*/
+  }
+  collision (x, jumperY) {
+    return (x + 20 > this.platformX && x + 15 < this.platformX + 50 && jumperY + 50 >= this.platformY && jumperY + 50 <= this.platformY + 15);
+  }
 
 }
 
@@ -229,11 +278,17 @@ function setup() {
 
     startY -= random(90, 120); //Next platform creates randomly between 90-120 pxl from the previouse one
   }
-  //create 5 breakable platforms
+  //create breakable platforms
   for (let i = 0; i < 100; i++) {
     platformsBreak.push(new platformBreak(random(0, 350), startYBreak));
 
-    startYBreak -= random(90, 120); //Next platform creates randomly between 90-120 pxl from the previouse one
+    startYBreak -= random(250, 300); //Next platform creates randomly between 90-120 pxl from the previouse one
+  }
+  //create moveable platforms
+  for (let i = 0; i < 100; i++) {
+    platformsMove.push(new platformMove(random(0, 350), startYMove));
+
+    startYMove -= random(300, 350);
   }
 }
 
@@ -260,8 +315,10 @@ function draw() {
       player.velocityY = 0;
       startY = random(500, 550);
       startYBreak = random(200,250);
+      startYMove = random(200, 250);
       platforms = [];
       platformsBreak = [];
+      platformsMove = [];
 
       //Resetting the platforms to make a new pattern
       for (let i = 0; i < 100; i++) {
@@ -271,6 +328,10 @@ function draw() {
       for (let i = 0; i < 100; i++) {
         platformsBreak.push(new platformBreak(random(0, 350), startYBreak));
         startYBreak -= random(90, 120); 
+      }
+      for (let i = 0; i < 100; i++) {
+        platformsMove.push(new platformMove(random(0, 350), startYMove));
+        startYMove -= random(90, 120);
       }
       
     }
