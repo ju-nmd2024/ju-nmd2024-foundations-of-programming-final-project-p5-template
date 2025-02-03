@@ -327,11 +327,11 @@ function draw() {
       }
       for (let i = 0; i < 100; i++) {
         platformsBreak.push(new platformBreak(random(0, 350), startYBreak));
-        startYBreak -= random(90, 120); 
+        startYBreak -= random(250, 300); 
       }
       for (let i = 0; i < 100; i++) {
         platformsMove.push(new platformMove(random(0, 350), startYMove));
-        startYMove -= random(90, 120);
+        startYMove -= random(300, 350);
       }
       
     }
